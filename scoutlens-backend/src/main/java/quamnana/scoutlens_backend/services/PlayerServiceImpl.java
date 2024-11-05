@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import lombok.AllArgsConstructor;
 import quamnana.scoutlens_backend.dtos.PlayerBasicInfo;
@@ -21,7 +24,7 @@ public class PlayerServiceImpl implements PlayerService {
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public List<PlayerBasicInfo> getPlayers(Map<String, Object> filterParams) {
+    public Page<PlayerBasicInfo> getPlayers(Map<String, Object> filterParams, Pageable pageable) {
         Query query = new Query();
 
         for (Map.Entry<String, Object> entry : filterParams.entrySet()) {
@@ -32,7 +35,11 @@ public class PlayerServiceImpl implements PlayerService {
 
         query.fields().include("_id", "fullName", "team", "position", "nation", "league", "age");
 
-        return mongoTemplate.find(query, PlayerBasicInfo.class, "players");
+        // Enable pagination and sorting
+        long count = mongoTemplate.count(query, PlayerBasicInfo.class, "players");
+        List<PlayerBasicInfo> players = mongoTemplate.find(query.with(pageable), PlayerBasicInfo.class, "players");
+
+        return new PageImpl<>(players, pageable, count);
 
     }
 

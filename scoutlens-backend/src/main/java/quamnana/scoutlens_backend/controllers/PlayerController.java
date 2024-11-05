@@ -10,9 +10,11 @@ import quamnana.scoutlens_backend.dtos.PlayerComparison;
 import quamnana.scoutlens_backend.entities.Player;
 import quamnana.scoutlens_backend.services.PlayerService;
 
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +27,10 @@ public class PlayerController {
     private PlayerService playerService;
 
     @GetMapping
-    public ResponseEntity<List<PlayerBasicInfo>> getPlayersWithFilters(
-            @RequestParam Map<String, Object> filterParams) {
-        List<PlayerBasicInfo> players = playerService.getPlayers(filterParams);
+    public ResponseEntity<Page<PlayerBasicInfo>> getPlayersWithFilters(
+            @RequestParam Map<String, Object> filterParams,
+            @PageableDefault(size = 10, sort = "position") Pageable pageable) {
+        Page<PlayerBasicInfo> players = playerService.getPlayers(filterParams, pageable);
         return new ResponseEntity<>(players, HttpStatus.OK);
     }
 

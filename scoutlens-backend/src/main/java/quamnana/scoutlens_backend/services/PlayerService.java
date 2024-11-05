@@ -1,14 +1,16 @@
 package quamnana.scoutlens_backend.services;
 
-import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import quamnana.scoutlens_backend.dtos.PlayerBasicInfo;
 import quamnana.scoutlens_backend.dtos.PlayerComparison;
 import quamnana.scoutlens_backend.entities.Player;
 
 public interface PlayerService {
-    List<PlayerBasicInfo> getPlayers(Map<String, Object> filterParams);
+    Page<PlayerBasicInfo> getPlayers(Map<String, Object> filterParams, Pageable pageable);
 
     Player getPlayer(String id);
 
