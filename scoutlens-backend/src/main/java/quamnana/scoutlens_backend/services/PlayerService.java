@@ -1,5 +1,6 @@
 package quamnana.scoutlens_backend.services;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import quamnana.scoutlens_backend.dtos.PlayerBasicInfo;
 import quamnana.scoutlens_backend.dtos.PlayerComparison;
+import quamnana.scoutlens_backend.dtos.overview.OverviewData;
 import quamnana.scoutlens_backend.entities.Player;
 
 public interface PlayerService {
@@ -16,4 +18,5 @@ public interface PlayerService {
 
     PlayerComparison comparePlayers(String player1Id, String player2Id);
 
+    OverviewData getOverview();
 }

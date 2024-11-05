@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import quamnana.scoutlens_backend.dtos.PlayerBasicInfo;
 import quamnana.scoutlens_backend.dtos.PlayerComparison;
+import quamnana.scoutlens_backend.dtos.overview.OverviewData;
 import quamnana.scoutlens_backend.entities.Player;
 import quamnana.scoutlens_backend.services.PlayerService;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -48,4 +50,10 @@ public class PlayerController {
         return new ResponseEntity<>(comparisonResult, HttpStatus.OK);
     }
 
+    @GetMapping("/overview")
+    public ResponseEntity<OverviewData> getOverview() {
+        OverviewData overiew = playerService.getOverview();
+
+        return new ResponseEntity<>(overiew, HttpStatus.OK);
+    }
 }
