@@ -11,7 +11,6 @@ import quamnana.scoutlens_backend.dtos.overview.OverviewData;
 import quamnana.scoutlens_backend.entities.Player;
 import quamnana.scoutlens_backend.services.PlayerService;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -56,4 +55,5 @@ public class PlayerController {
 
         return new ResponseEntity<>(overiew, HttpStatus.OK);
     }
+
 }

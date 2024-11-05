@@ -1,4 +1,4 @@
-package quamnana.scoutlens_backend.services;
+package quamnana.scoutlens_backend.utils;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import quamnana.scoutlens_backend.dtos.overview.TopPlayerStat;
 
 @Service
 @AllArgsConstructor
-public class OverviewService {
+public class OverviewUtil {
     private MongoTemplate mongoTemplate;
 
     public List<CountryData> getCountriesData() {

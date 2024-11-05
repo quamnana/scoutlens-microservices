@@ -1,6 +1,5 @@
 package quamnana.scoutlens_backend.services;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -19,4 +18,5 @@ public interface PlayerService {
     PlayerComparison comparePlayers(String player1Id, String player2Id);
 
     OverviewData getOverview();
+
 }
