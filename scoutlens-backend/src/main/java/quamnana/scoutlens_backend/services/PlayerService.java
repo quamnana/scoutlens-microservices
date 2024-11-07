@@ -19,4 +19,6 @@ public interface PlayerService {
 
     OverviewData getOverview();
 
+    Page<Player> findPlayersWithFilters(
+            Map<String, String> filters, Pageable pageable);
 }
