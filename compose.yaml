@@ -11,11 +11,31 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  elasticsearch:
+    container_name: elasticsearch-db
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9300:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   etl:
     container_name: etl-script
     build: scoutlens-etl
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
     environment:
       - MONGO_HOST=mongodb
       - MONGO_PORT=27017
@@ -23,9 +43,9 @@ services:
       - MONGO_COLLECTION=players
       - MONGO_USER=scoutlens_admin
       - MONGO_PASSWORD=password
-    links:
-      - mongodb
 
 volumes:
   mongodb_data:
+    driver: local
+  elasticsearch_data:
     driver: local

@@ -363,15 +363,3 @@ def persist_data(data):
         print("Data successfully inserted into MongoDB.")
     except Exception as e:
         print(f"Failed to insert data: {e}")
-
-
-if __name__ == "__main__":
-    data = process_dataset(
-        "./dataset/players-data.json",
-    )
-
-    # Persist data to MongoDB
-    persist_data(data)
-
-    # Print summary statistics
-    print_summary(data)
