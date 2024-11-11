@@ -48,6 +48,7 @@ class ESUploader:
                         "analyzer": "player_analyzer",
                         "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                     },
+                    "mid": {"type": "keyword"},
                     "nation": {"type": "keyword"},
                     "position": {"type": "keyword"},
                     "team": {"type": "keyword"},

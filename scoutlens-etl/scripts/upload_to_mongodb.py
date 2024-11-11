@@ -4,6 +4,17 @@ import os
 import json
 import numpy as np
 import pycountry
+from bson import ObjectId
+from datetime import datetime
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return json.JSONEncoder.default(self, obj)
 
 
 def load_data(input_file: str) -> pd.DataFrame:
@@ -340,10 +351,10 @@ def process_dataset(input_file: str):
     return df
 
 
-def persist_data(data):
+def connect_mongodb():
     # Connect to MongoDB
     mongo_host = os.getenv("MONGO_HOST", "localhost")
-    mongo_port = int(os.getenv("MONGO_PORT", "27017"))
+    mongo_port = int(os.getenv("MONGO_PORT", "27018"))
     mongo_user = os.getenv("MONGO_USER", "scoutlens_admin")
     mongo_password = os.getenv("MONGO_PASSWORD", "password")
     mongo_db = os.getenv("MONGO_DB", "scoutlens")
@@ -352,9 +363,20 @@ def persist_data(data):
     # Construct the MongoDB URI with authentication
     mongo_uri = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}"
     client = MongoClient(mongo_uri)
-
     db = client[mongo_db]
     collection = db[mongo_collection]
+    return collection
+
+
+def rename_id_field(doc):
+    """Helper function to rename _id to mid in a document"""
+    if "_id" in doc:
+        doc["mid"] = doc.pop("_id")
+    return doc
+
+
+def persist_data(data):
+    collection = connect_mongodb()
 
     # Convert DataFrame to dictionary and insert into MongoDB
     data_dict = data.to_dict("records")
@@ -363,3 +385,32 @@ def persist_data(data):
         print("Data successfully inserted into MongoDB.")
     except Exception as e:
         print(f"Failed to insert data: {e}")
+
+
+def export_data(output_file):
+    try:
+        collection = connect_mongodb()
+        documents = list(collection.find())
+
+        # Rename _id to m_id in all documents
+        documents = [rename_id_field(doc) for doc in documents]
+
+        # Create output directory if it doesn't exist
+        os.makedirs(
+            os.path.dirname(output_file) if os.path.dirname(output_file) else ".",
+            exist_ok=True,
+        )
+
+        # Write to JSON file
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(documents, f, cls=JSONEncoder, ensure_ascii=False, indent=2)
+
+        print(f"Successfully exported {len(documents)} documents to {output_file}")
+        return True
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return False
+
+
+if __name__ == "__main__":
+    export_data("./dataset/mongo-players-data.json")
