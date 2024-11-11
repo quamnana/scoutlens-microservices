@@ -30,9 +30,24 @@ class ESUploader:
     def create_index(self):
         """Create the index with appropriate mappings"""
         mappings = {
+            "settings": {
+                "analysis": {
+                    "analyzer": {
+                        "player_analyzer": {
+                            "type": "custom",
+                            "tokenizer": "standard",
+                            "filter": ["lowercase", "asciifolding"],
+                        }
+                    }
+                }
+            },
             "mappings": {
                 "properties": {
-                    "fullName": {"type": "keyword"},
+                    "fullName": {
+                        "type": "text",
+                        "analyzer": "player_analyzer",
+                        "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
+                    },
                     "nation": {"type": "keyword"},
                     "position": {"type": "keyword"},
                     "team": {"type": "keyword"},
