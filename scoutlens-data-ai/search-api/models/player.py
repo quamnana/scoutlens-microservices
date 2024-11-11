@@ -3,6 +3,7 @@ from typing import Optional, List
 
 
 class PlayerBase(BaseModel):
+    mid: str
     fullName: str
     nation: str
     position: str
