@@ -44,6 +44,15 @@ services:
       - MONGO_USER=scoutlens_admin
       - MONGO_PASSWORD=password
 
+  search-api:
+    container_name: search-api
+    build: scoutlens-data-ai/search-api
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
 volumes:
   mongodb_data:
     driver: local
