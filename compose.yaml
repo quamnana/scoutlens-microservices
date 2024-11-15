@@ -43,6 +43,14 @@ services:
       - MONGO_COLLECTION=players
       - MONGO_USER=scoutlens_admin
       - MONGO_PASSWORD=password
+    develop:
+      watch:
+        - path: ./scoutlens-etl
+          target: /app
+          action: sync
+          ignore:
+            - "*.pyc"
+            - "__pycache__"
 
   search-api:
     container_name: search-api
@@ -52,6 +60,14 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
+    develop:
+      watch:
+        - path: ./scoutlens-data-ai/search-api
+          target: /app
+          action: sync
+          ignore:
+            - "*.pyc"
+            - "__pycache__"
 
 volumes:
   mongodb_data:
