@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.AllArgsConstructor;
+import quamnana.scoutlens_backend.dtos.response.LoginResponseDto;
+import quamnana.scoutlens_backend.dtos.response.SignUpResponseDto;
 import quamnana.scoutlens_backend.entities.User;
 import quamnana.scoutlens_backend.services.AuthService;
 
@@ -20,12 +22,12 @@ public class AuthController {
     // }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user) {
+    public ResponseEntity<SignUpResponseDto> signup(@RequestBody User user) {
         return ResponseEntity.ok(authService.signup(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> loginRequest) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody Map<String, String> loginRequest) {
         String username = loginRequest.get("username");
         String password = loginRequest.get("password");
 

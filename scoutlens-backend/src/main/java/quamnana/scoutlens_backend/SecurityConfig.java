@@ -4,12 +4,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import io.jsonwebtoken.security.Keys;
+import lombok.NoArgsConstructor;
+
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
+@EnableWebSecurity
+@NoArgsConstructor
 public class SecurityConfig {
 
     @Value("${jwt.secret}")
@@ -17,14 +24,7 @@ public class SecurityConfig {
 
     @Bean
     public SecretKey jwtSecretKey() {
-        // Convert hex string to byte array
-        byte[] keyBytes = new byte[secretKey.length() / 2];
-        for (int i = 0; i < keyBytes.length; i++) {
-            int index = i * 2;
-            int j = Integer.parseInt(secretKey.substring(index, index + 2), 16);
-            keyBytes[i] = (byte) j;
-        }
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     @Bean
@@ -34,10 +34,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
                         .anyRequest().authenticated());
+
         return http.build();
     }
 }
