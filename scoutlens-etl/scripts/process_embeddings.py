@@ -26,7 +26,7 @@ def persist_to_qdrant(data: pd.DataFrame, collection_name: str):
     for index, row in data.iterrows():
         if row["embedding"] is not None:
             point = PointStruct(
-                id=str(uuid.uuid4()),
+                id=row.get("rank"),
                 vector=row["embedding"],
                 payload={
                     "rank": row.get("rank"),

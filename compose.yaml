@@ -86,6 +86,23 @@ services:
             - "*.pyc"
             - "__pycache__"
 
+  ai-api:
+    container_name: ai-api
+    build: scoutlens-data-ai/ai-api
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    ports:
+      - "8088:8088"
+    develop:
+      watch:
+        - path: ./scoutlens-data-ai/ai-api
+          target: /app
+          action: sync
+          ignore:
+            - "*.pyc"
+            - "__pycache__"
+
 volumes:
   mongodb_data:
     driver: local
