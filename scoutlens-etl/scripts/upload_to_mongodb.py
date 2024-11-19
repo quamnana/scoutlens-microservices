@@ -276,15 +276,15 @@ def normalize_positions(df: pd.DataFrame) -> pd.DataFrame:
     # Specific position mapping as provided
     position_mapping = {
         "DF": "Defender",
-        "DFFW": "Fullback",
-        "DFMF": "Defensive Midfielder",
+        "DFFW": "Defender",
+        "DFMF": "Midfielder",
         "FW": "Attacker",
-        "FWDF": "Attacking Midfielder",
-        "FWMF": "Wide Midfielder",
+        "FWDF": "Midfielder",
+        "FWMF": "Midfielder",
         "GK": "Goalkeeper",
         "MF": "Midfielder",
-        "MFDF": "Defensive Midfielder",
-        "MFFW": "Winger",
+        "MFDF": "Midfielder",
+        "MFFW": "Midfielder",
     }
 
     # Apply the transformation
@@ -410,7 +410,3 @@ def export_data(output_file):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return False
-
-
-if __name__ == "__main__":
-    export_data("./dataset/mongo-players-data.json")
