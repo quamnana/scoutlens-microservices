@@ -3,3 +3,5 @@ uvicorn==0.27.1
 qdrant-client
 pydantic==2.6.1
 pydantic-settings==2.1.0
+openai
+pymongo
